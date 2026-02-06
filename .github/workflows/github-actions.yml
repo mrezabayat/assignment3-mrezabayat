@@ -18,9 +18,15 @@ jobs:
     full-test:
         container: cuaesd/aesd-autotest:24-assignment3
         runs-on: self-hosted
+        env:
+          PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
         steps:
           - uses: actions/checkout@v2
           - name: Checkout submodules
             run : git submodule update --init --recursive
+          - name: Install aarch64 toolchain
+            run: apt-get update && apt-get install -y gcc-aarch64-linux-gnu
+          - name: Show cross-compiler path
+            run: command -v aarch64-linux-gnu-gcc && aarch64-linux-gnu-gcc --version
           - name: Run full test
             run: ./full-test.sh
